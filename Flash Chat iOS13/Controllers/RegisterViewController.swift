@@ -7,13 +7,35 @@
 //
 
 import UIKit
+import Firebase
 
-class RegisterViewController: UIViewController {
-
+class RegisterViewController: UIViewController
+{
+    
     @IBOutlet weak var emailTextfield: UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
     
-    @IBAction func registerPressed(_ sender: UIButton) {
+    @IBAction func registerPressed(_ sender: UIButton)
+    {
+        
+        if let email = emailTextfield.text, let password = passwordTextfield.text
+        {
+            Auth.auth().createUser(withEmail: email, password: password)
+            { authResult, error in
+                if let e = error
+                {
+                    let alert = UIAlertController(title: "Warning!", message: e.localizedDescription, preferredStyle: .alert)
+                    let okayAction = UIAlertAction(title: "Okay", style: .default)
+                    alert.addAction(okayAction)
+                    self.present(alert, animated: true, completion: nil)
+                    
+                }
+                else
+                {
+                    self.performSegue(withIdentifier: K.registerSegue, sender: self)
+                }
+            }
+        }
     }
     
 }
